@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">EcoApp</string>
+    <string name="news">Новости</string>
+    <string name="markings">Маркировки</string>
+    <string name="preparing">Подготовка</string>
+    <string name="map">Карта</string>
+    <string name="intro_title">В нашем приложении ты можешь</string>
+    <integer name="com_vk_sdk_AppId">7353208</integer>
+
+</resources>

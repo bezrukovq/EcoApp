@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/preparingFragment"
+    android:id="@+id/preparing">
+    <fragment
+        android:id="@+id/preparingFragment"
+        android:name="com.example.ecoapp.feature.preparing.PreparingFragment"
+        android:label="Preparing Fragment"
+        tools:layout="@layout/fragment_preparing_list">
+    </fragment>
+</navigation>
