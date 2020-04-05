@@ -13,16 +13,32 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Topic"
+                android:padding="24dp"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="22sp"/>
+
+            <ImageView
+                android:id="@+id/topic_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp" />
             <TextView
                 android:id="@+id/news_topic_text"
                 android:linksClickable="true"
                 android:autoLink="all"
                 android:textIsSelectable="true"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="Topic"
+                android:padding="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_editor_absoluteY="127dp" />
 

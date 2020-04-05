@@ -12,9 +12,9 @@ import com.example.ecoapp.data.News
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.item_news_list.view.*
 
-class NewsAdapter(private var onLikeListener: (Int,Boolean) -> Unit) : RecyclerView.Adapter<NewsAdapter.NewsHolder>(){
+class NewsAdapter(private var onLikeListener: (News,Boolean) -> Unit) : RecyclerView.Adapter<NewsAdapter.NewsHolder>(){
 
-    var newsList = arrayListOf(
+    var newsList : ArrayList<News> = arrayListOf<News>(
         News(1,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",true),
         News(2,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",false),
         News(3,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",false),
@@ -59,7 +59,7 @@ class NewsAdapter(private var onLikeListener: (Int,Boolean) -> Unit) : RecyclerV
                     itemView.topic_like.speed = 1f
                 news.liked = !news.liked
                 itemView.topic_like.playAnimation()
-                onLikeListener(news.id,news.liked)
+                onLikeListener(news,news.liked)
             }
         }
     }
