@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import com.bumptech.glide.Glide
 import com.example.ecoapp.Constants
 import com.example.ecoapp.R
 import com.example.ecoapp.data.News
@@ -18,19 +19,23 @@ class NewsLikedFragment: BaseMvpFragment(), NewsTab {
     override val layoutId: Int
         get() = R.layout.fragment_news_list
 
-    val adapter = NewsAdapter{news,liked-> onLikePressed(news,liked)}
+    private var adapter : NewsAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        retainInstance =true
+        adapter = NewsAdapter(Glide.with(this)){ news, liked-> onLikePressed(news,liked)}
         news_list.adapter = adapter
+        refresh()
         (activity as MainActivity).supportActionBar?.hide()
     }
 
     override fun refresh(){
+        adapter?.newsList?.clear()
         val prefs = activity?.getSharedPreferences(Constants.SHAREDPREF, Context.MODE_PRIVATE)
         val list = Gson().fromJson(prefs?.getString(Constants.LIKED_LIST,""),Constants.NEWS_LIST_TYPE)?:ArrayList<News>()
-        adapter.newsList = list
-        adapter.notifyDataSetChanged()
+        adapter?.newsList = list
+        adapter?.notifyDataSetChanged()
     }
 
     @SuppressLint("ApplySharedPref")

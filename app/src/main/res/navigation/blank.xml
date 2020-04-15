@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/blank"
+    android:id="@+id/map">
+
+    <fragment
+        android:id="@+id/blank"
+        android:name="com.example.ecoapp.feature.webmapview.BlankFragment"
+        tools:layout="@layout/fragment_webview"
+        android:label="Map Fragment" />
+</navigation>

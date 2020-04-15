@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginTop="?android:attr/actionBarSize"
     android:layout_height="match_parent"
+    android:layout_marginTop="?android:attr/actionBarSize"
     android:orientation="vertical">
 
     <ScrollView
@@ -20,27 +20,41 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="Topic"
                 android:padding="24dp"
                 android:textColor="@color/colorTextPrimary"
-                android:textSize="22sp"/>
+                android:textSize="22sp"
+                tools:text="Topic" />
 
-            <ImageView
-                android:id="@+id/topic_image"
+            <com.smarteist.autoimageslider.SliderView
+                android:id="@+id/imageSlider"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp" />
+                android:layout_height="300dp"
+                app:sliderAnimationDuration="600"
+                app:sliderAutoCycleDirection="back_and_forth"
+                app:sliderAutoCycleEnabled="true"
+                app:sliderIndicatorAnimationDuration="600"
+                app:sliderIndicatorGravity="center_horizontal|bottom"
+                app:sliderIndicatorMargin="15dp"
+                app:sliderIndicatorOrientation="horizontal"
+                app:sliderIndicatorPadding="3dp"
+                app:sliderIndicatorRadius="2dp"
+                app:sliderIndicatorSelectedColor="#5A5A5A"
+                app:sliderIndicatorUnselectedColor="#FFF"
+                app:sliderScrollTimeInSec="1"
+                app:sliderStartAutoCycle="true" />
+
             <TextView
                 android:id="@+id/news_topic_text"
-                android:linksClickable="true"
-                android:autoLink="all"
-                android:textIsSelectable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="Topic"
+                android:autoLink="all"
+                android:linksClickable="true"
                 android:padding="16dp"
+                android:textIsSelectable="true"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="127dp" />
+                tools:layout_editor_absoluteY="127dp"
+                tools:text="Topic" />
 
         </LinearLayout>
     </ScrollView>

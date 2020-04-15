@@ -5,7 +5,9 @@ data class News(
     var topic: String,
     var desc: String,
     var fullText: String,
-    var liked: Boolean
+    var liked: Boolean,
+    var photoUrl: String,
+    var allPhotos: List<String>
 ){
     override fun hashCode(): Int {
         var result = id

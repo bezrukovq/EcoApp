@@ -1,27 +1,28 @@
 package com.example.ecoapp.feature.webmapview
 
+import android.annotation.TargetApi
+import android.content.Intent
+import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import android.widget.Toast
-import android.graphics.Bitmap
-import android.webkit.WebView
 import android.webkit.WebResourceRequest
-import android.os.Build
-import android.annotation.TargetApi
+import android.webkit.WebView
 import android.webkit.WebViewClient
-import kotlinx.android.synthetic.main.fragment_webview.*
-import android.content.Intent
+import android.widget.Toast
 import androidx.core.net.toUri
-import com.example.ecoapp.feature.main.MainActivity
+import androidx.fragment.app.Fragment
 import com.example.ecoapp.R
+import com.example.ecoapp.feature.main.MainActivity
+import kotlinx.android.synthetic.main.fragment_webview.*
 
 
 class WebViewFragment  : Fragment() {
 
-    private var firstLoad = true
+    private var webViewBundle: Bundle? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,22 +85,18 @@ class WebViewFragment  : Fragment() {
         }
         webView.webViewClient = webViewClient
         webView.settings.javaScriptEnabled = true
-        if (firstLoad)
-        webView.loadUrl("https://recyclemap.ru/kazan")
+        if (webViewBundle == null) {
+            webView.loadUrl("https://recyclemap.ru/kazan")
+        } else {
+            webView.restoreState(webViewBundle);
+        }
         (activity as MainActivity).supportActionBar?.hide()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)/*
-        webView.saveState(outState)
-        outState.putBoolean("first",firstLoad)
-        firstLoad = false*/
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        webView.restoreState(savedInstanceState)
-        firstLoad = savedInstanceState?.getBoolean("first")?:true
+    override fun onPause() {
+        super.onPause()
+        webViewBundle = Bundle()
+        webView.saveState(webViewBundle)
     }
 
     override fun onDestroyView() {

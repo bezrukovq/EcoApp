@@ -2,6 +2,7 @@ package com.example.ecoapp.feature.main
 
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -9,6 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.ecoapp.R
+import com.example.ecoapp.feature.webmapview.WebViewFragment
 import com.example.ecoapp.utils.nav.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     private var currentNavController: LiveData<NavController>? = null
 
+    private val webViewFragment = WebViewFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -27,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
+        supportFragmentManager.beginTransaction().replace(R.id.container,webViewFragment).commit()
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -45,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             R.navigation.news,
             R.navigation.markings,
             R.navigation.preparing,
-            R.navigation.map
+            R.navigation.blank
         )
 
         // Setup the bottom navigation view with a list of navigation graphs
@@ -66,5 +71,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return currentNavController?.value?.navigateUp() ?: false
+    }
+
+    fun hideMap(){
+        container.visibility = View.INVISIBLE
+    }
+
+    fun showMap(){
+        container.visibility = View.VISIBLE
     }
 }

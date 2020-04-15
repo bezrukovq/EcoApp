@@ -35,7 +35,7 @@ class NewsTabsFragment: BaseMvpFragment() {
 }
 class NewsPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    val list = arrayListOf<Fragment>(NewsListFragment(), NewsLikedFragment())
+    val list = arrayListOf<Fragment>(newsListFragment, newsLikedFragment)
 
     override fun getCount(): Int  = list.size
 
@@ -43,5 +43,9 @@ class NewsPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm,BEHAV
 
     override fun getPageTitle(position: Int): CharSequence {
         return (list[position] as NewsTab).getTitle()
+    }
+    companion object{
+        val newsListFragment = NewsListFragment()
+        val newsLikedFragment = NewsLikedFragment()
     }
 }

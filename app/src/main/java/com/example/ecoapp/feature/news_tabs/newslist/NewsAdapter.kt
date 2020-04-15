@@ -6,24 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.example.ecoapp.Constants
 import com.example.ecoapp.R
 import com.example.ecoapp.data.News
+import com.example.ecoapp.utils.ParseHelper
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.item_news_list.view.*
 
-class NewsAdapter(private var onLikeListener: (News,Boolean) -> Unit) : RecyclerView.Adapter<NewsAdapter.NewsHolder>(){
+class NewsAdapter(private val requestManager: RequestManager,private var onLikeListener: (News,Boolean) -> Unit) : RecyclerView.Adapter<NewsAdapter.NewsHolder>(){
 
-    var newsList : ArrayList<News> = arrayListOf<News>(
-        News(1,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",true),
-        News(2,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",false),
-        News(3,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",false),
-        News(4,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",true),
-        News(5,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",false),
-        News(6,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",false),
-        News(7,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",true),
-        News(8,"AAAAAA","Речь"," о Мелеузовском сахарном заводе в Башкирии (входит в группу «Продимекс»), Нурлатском сахарном заводе в Татарстане (входит в местную группу «Агро-инвест») и Товарковском сахарном заводе (принадлежит структуре Россельхозбанка) в Тульской области.",false)
-    )
+    var newsList : ArrayList<News> = arrayListOf<News>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsHolder =
         NewsHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_news_list,parent,false))
@@ -41,8 +35,9 @@ class NewsAdapter(private var onLikeListener: (News,Boolean) -> Unit) : Recycler
                     putString(Constants.NEWS_KEY,Gson().toJson(news))
                 })
             }
-            itemView.topic_title.text = news.topic
-            itemView.topic_desc.text = news.desc
+            itemView.topic_title.text = ParseHelper.parseIDLinks(news.topic)
+            itemView.topic_desc.text = ParseHelper.parseIDLinks(news.desc)
+            requestManager.load(news.photoUrl).into(itemView.topic_image)
            // itemView.topic_like.speed = 100000f
             if (news.liked)
                 itemView.topic_like.progress = 1f

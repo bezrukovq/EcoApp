@@ -4,14 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import com.bumptech.glide.Glide
 import com.example.ecoapp.Constants
 import com.example.ecoapp.feature.main.MainActivity
 import com.example.ecoapp.R
 import com.example.ecoapp.data.News
 import com.example.ecoapp.feature.news_tabs.NewsTab
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.md.nails.presentation.basemvp.BaseMvpFragment
 import com.vk.sdk.api.*
+import com.vk.sdk.api.model.VKApiPhoto
 import com.vk.sdk.api.model.VKApiPost
 import com.vk.sdk.api.model.VKList
 import kotlinx.android.synthetic.main.fragment_news_list.*
@@ -20,10 +23,11 @@ class NewsListFragment: BaseMvpFragment(), NewsTab {
     override val layoutId: Int
         get() = R.layout.fragment_news_list
 
-    val adapter = NewsAdapter{news,liked-> onLikePressed(news,liked)}
+    private var adapter : NewsAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = NewsAdapter(Glide.with(this)){ news, liked-> onLikePressed(news,liked)}
         news_list.adapter = adapter
         (activity as MainActivity).supportActionBar?.hide()
         refresh()
@@ -31,7 +35,7 @@ class NewsListFragment: BaseMvpFragment(), NewsTab {
 
     override fun refresh() {
         VKApi.wall().get(VKParameters.from(VKApiConst.ACCESS_TOKEN, Constants.VK_API_ACCESS_TOKEN,
-            VKApiConst.COUNT, 10,
+            VKApiConst.COUNT, 15,
             VKApiConst.OWNER_ID, "-96281069",
             VKApiConst.EXTENDED,1,
             VKApiConst.FILTERS, "owner",
@@ -40,17 +44,19 @@ class NewsListFragment: BaseMvpFragment(), NewsTab {
             .executeWithListener(object : VKRequest.VKRequestListener() {
                 override fun onComplete(response: VKResponse?) {
                     val resultList = response?.parsedModel as VKList<VKApiPost>
-                    adapter.newsList.clear()
+                    adapter?.newsList?.clear()
                   //  adapter.notifyDataSetChanged()
                     val prefs = activity?.getSharedPreferences(Constants.SHAREDPREF, Context.MODE_PRIVATE)
                     val list = Gson().fromJson(prefs?.getString(Constants.LIKED_LIST,""),Constants.NEWS_LIST_TYPE)?:ArrayList<News>()
                     for (x in resultList) {
+                        val photoUrl = (x.attachments.firstOrNull { att -> att is VKApiPhoto } as VKApiPhoto?)?.photo_604.toString()
+                        val allPhotos = x.attachments.filter { att -> att is VKApiPhoto }.filterNotNull().map { x-> (x as VKApiPhoto).photo_604 }
                         val news = News(x.id,x.text.split("\n")[0],x.text.subSequence(0,if ( x.text.length<120 ){ x.text.length }else{ 120}).toString().plus("..."), x.text,
-                            true)
+                            true,photoUrl,allPhotos)
                         news.liked = list.contains(news)
-                        adapter.newsList.add(news)
+                        adapter?.newsList?.add(news)
                     }
-                    adapter.notifyDataSetChanged()
+                    adapter?.notifyDataSetChanged()
                 }
                 override fun onError(error: VKError?) { super.onError(error)
                 }
