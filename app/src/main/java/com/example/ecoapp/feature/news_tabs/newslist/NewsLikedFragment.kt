@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.ecoapp.Constants
 import com.example.ecoapp.R
@@ -15,7 +16,7 @@ import com.google.gson.reflect.TypeToken
 import com.md.nails.presentation.basemvp.BaseMvpFragment
 import kotlinx.android.synthetic.main.fragment_news_list.*
 
-class NewsLikedFragment: BaseMvpFragment(), NewsTab {
+class NewsLikedFragment: BaseMvpFragment(), NewsTab, SwipeRefreshLayout.OnRefreshListener {
     override val layoutId: Int
         get() = R.layout.fragment_news_list
 
@@ -27,15 +28,20 @@ class NewsLikedFragment: BaseMvpFragment(), NewsTab {
         adapter = NewsAdapter(Glide.with(this)){ news, liked-> onLikePressed(news,liked)}
         news_list.adapter = adapter
         refresh()
+        swipe_refresh.setOnRefreshListener(this)
         (activity as MainActivity).supportActionBar?.hide()
     }
 
     override fun refresh(){
+        feed_loading.visibility = View.VISIBLE
         adapter?.newsList?.clear()
         val prefs = activity?.getSharedPreferences(Constants.SHAREDPREF, Context.MODE_PRIVATE)
         val list = Gson().fromJson(prefs?.getString(Constants.LIKED_LIST,""),Constants.NEWS_LIST_TYPE)?:ArrayList<News>()
         adapter?.newsList = list
+        toBeLikedHint.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
         adapter?.notifyDataSetChanged()
+        feed_loading.visibility = View.GONE
+        swipe_refresh.isRefreshing = false
     }
 
     @SuppressLint("ApplySharedPref")
@@ -55,4 +61,8 @@ class NewsLikedFragment: BaseMvpFragment(), NewsTab {
     }
 
     override fun getTitle() = "Избранное"
+    override fun onRefresh() {
+        swipe_refresh.isRefreshing = true
+        refresh()
+    }
 }

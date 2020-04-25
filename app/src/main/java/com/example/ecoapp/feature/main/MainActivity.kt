@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun hideMap(){
-        container.visibility = View.INVISIBLE
+        container.visibility = View.GONE
     }
 
     fun showMap(){

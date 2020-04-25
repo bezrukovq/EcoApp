@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.ecoapp.Constants
 import com.example.ecoapp.feature.main.MainActivity
@@ -11,7 +12,6 @@ import com.example.ecoapp.R
 import com.example.ecoapp.data.News
 import com.example.ecoapp.feature.news_tabs.NewsTab
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.md.nails.presentation.basemvp.BaseMvpFragment
 import com.vk.sdk.api.*
 import com.vk.sdk.api.model.VKApiPhoto
@@ -19,7 +19,7 @@ import com.vk.sdk.api.model.VKApiPost
 import com.vk.sdk.api.model.VKList
 import kotlinx.android.synthetic.main.fragment_news_list.*
 
-class NewsListFragment: BaseMvpFragment(), NewsTab {
+class NewsListFragment: BaseMvpFragment(), NewsTab, SwipeRefreshLayout.OnRefreshListener {
     override val layoutId: Int
         get() = R.layout.fragment_news_list
 
@@ -31,9 +31,11 @@ class NewsListFragment: BaseMvpFragment(), NewsTab {
         news_list.adapter = adapter
         (activity as MainActivity).supportActionBar?.hide()
         refresh()
+        swipe_refresh.setOnRefreshListener(this)
     }
 
     override fun refresh() {
+        feed_loading.visibility = View.VISIBLE
         VKApi.wall().get(VKParameters.from(VKApiConst.ACCESS_TOKEN, Constants.VK_API_ACCESS_TOKEN,
             VKApiConst.COUNT, 15,
             VKApiConst.OWNER_ID, "-96281069",
@@ -45,7 +47,7 @@ class NewsListFragment: BaseMvpFragment(), NewsTab {
                 override fun onComplete(response: VKResponse?) {
                     val resultList = response?.parsedModel as VKList<VKApiPost>
                     adapter?.newsList?.clear()
-                  //  adapter.notifyDataSetChanged()
+                    //adapter?.notifyDataSetChanged()
                     val prefs = activity?.getSharedPreferences(Constants.SHAREDPREF, Context.MODE_PRIVATE)
                     val list = Gson().fromJson(prefs?.getString(Constants.LIKED_LIST,""),Constants.NEWS_LIST_TYPE)?:ArrayList<News>()
                     for (x in resultList) {
@@ -57,8 +59,13 @@ class NewsListFragment: BaseMvpFragment(), NewsTab {
                         adapter?.newsList?.add(news)
                     }
                     adapter?.notifyDataSetChanged()
+                    feed_loading.visibility = View.GONE
+                    swipe_refresh.isRefreshing = false
                 }
-                override fun onError(error: VKError?) { super.onError(error)
+                override fun onError(error: VKError?) {
+                    feed_loading.visibility = View.GONE
+                    swipe_refresh.isRefreshing = false
+                    super.onError(error)
                 }
             })
     }
@@ -79,4 +86,8 @@ class NewsListFragment: BaseMvpFragment(), NewsTab {
     }
 
     override fun getTitle() = "Новости"
+    override fun onRefresh() {
+        swipe_refresh.isRefreshing = true
+        refresh()
+    }
 }

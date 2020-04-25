@@ -12,6 +12,7 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent"
         android:layout_marginBottom="?android:attr/actionBarSize"/>
     <androidx.fragment.app.FragmentContainerView
