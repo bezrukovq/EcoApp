@@ -3,12 +3,18 @@ package com.example.ecoapp.data
 data class News(
     var id:Int,
     var topic: String,
-    var desc: String,
     var fullText: String,
-    var liked: Boolean,
-    var photoUrl: String,
-    var allPhotos: List<String>
+    var liked: Boolean = false,
+    var photoUrl: String = "",
+    var allPhotos: List<String>,
+    var attachedNews: ArrayList<News> = arrayListOf()
 ){
+    var desc: String = fullText.subSequence(0,if (fullText.length<120 ){ fullText.length }else{ 120}).toString().plus("...")
+
+    init {
+        if (photoUrl.isEmpty())
+            photoUrl = allPhotos.firstOrNull().toString()
+    }
     override fun hashCode(): Int {
         var result = id
         result = 31 * result + topic.hashCode()

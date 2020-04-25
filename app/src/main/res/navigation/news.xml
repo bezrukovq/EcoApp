@@ -16,6 +16,9 @@
     <fragment
         android:id="@+id/news_topic_fragment"
         android:name="com.example.ecoapp.feature.topic.NewsFragment"
-        android:label="News Topic"
-        tools:layout="@layout/fragment_news_topic" />
+        tools:layout="@layout/fragment_news_topic">
+        <action
+            android:id="@+id/actionOpenTopic"
+            app:destination="@id/news_topic_fragment"/>
+    </fragment>
 </navigation>

@@ -35,7 +35,7 @@ class NewsListFragment: BaseMvpFragment(), NewsTab, SwipeRefreshLayout.OnRefresh
     }
 
     override fun refresh() {
-        feed_loading.visibility = View.VISIBLE
+        feed_loading?.visibility = View.VISIBLE
         VKApi.wall().get(VKParameters.from(VKApiConst.ACCESS_TOKEN, Constants.VK_API_ACCESS_TOKEN,
             VKApiConst.COUNT, 15,
             VKApiConst.OWNER_ID, "-96281069",
@@ -52,19 +52,19 @@ class NewsListFragment: BaseMvpFragment(), NewsTab, SwipeRefreshLayout.OnRefresh
                     val list = Gson().fromJson(prefs?.getString(Constants.LIKED_LIST,""),Constants.NEWS_LIST_TYPE)?:ArrayList<News>()
                     for (x in resultList) {
                         val photoUrl = (x.attachments.firstOrNull { att -> att is VKApiPhoto } as VKApiPhoto?)?.photo_604.toString()
-                        val allPhotos = x.attachments.filter { att -> att is VKApiPhoto }.filterNotNull().map { x-> (x as VKApiPhoto).photo_604 }
-                        val news = News(x.id,x.text.split("\n")[0],x.text.subSequence(0,if ( x.text.length<120 ){ x.text.length }else{ 120}).toString().plus("..."), x.text,
+                        val allPhotos = x.attachments.filterIsInstance<VKApiPhoto>().filterNotNull().map { x-> (x as VKApiPhoto).photo_604 }
+                        val news = News(x.id,x.text.split("\n")[0], x.text,
                             true,photoUrl,allPhotos)
                         news.liked = list.contains(news)
                         adapter?.newsList?.add(news)
                     }
                     adapter?.notifyDataSetChanged()
-                    feed_loading.visibility = View.GONE
-                    swipe_refresh.isRefreshing = false
+                    feed_loading?.visibility = View.GONE
+                    swipe_refresh?.isRefreshing = false
                 }
                 override fun onError(error: VKError?) {
-                    feed_loading.visibility = View.GONE
-                    swipe_refresh.isRefreshing = false
+                    feed_loading?.visibility = View.GONE
+                    swipe_refresh?.isRefreshing = false
                     super.onError(error)
                 }
             })

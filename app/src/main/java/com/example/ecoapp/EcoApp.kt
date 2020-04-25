@@ -12,6 +12,5 @@ class EcoApp: Application() {
     override fun onCreate() {
         super.onCreate()
         VKSdk.initialize(applicationContext)
-
     }
 }

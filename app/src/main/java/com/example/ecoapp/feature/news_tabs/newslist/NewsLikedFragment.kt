@@ -33,15 +33,15 @@ class NewsLikedFragment: BaseMvpFragment(), NewsTab, SwipeRefreshLayout.OnRefres
     }
 
     override fun refresh(){
-        feed_loading.visibility = View.VISIBLE
+        feed_loading?.visibility = View.VISIBLE
         adapter?.newsList?.clear()
         val prefs = activity?.getSharedPreferences(Constants.SHAREDPREF, Context.MODE_PRIVATE)
         val list = Gson().fromJson(prefs?.getString(Constants.LIKED_LIST,""),Constants.NEWS_LIST_TYPE)?:ArrayList<News>()
         adapter?.newsList = list
         toBeLikedHint.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
         adapter?.notifyDataSetChanged()
-        feed_loading.visibility = View.GONE
-        swipe_refresh.isRefreshing = false
+        feed_loading?.visibility = View.GONE
+        swipe_refresh?.isRefreshing = false
     }
 
     @SuppressLint("ApplySharedPref")
