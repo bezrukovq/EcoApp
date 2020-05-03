@@ -17,13 +17,9 @@ import kotlinx.android.synthetic.main.item_simple_list.view.*
 class SimpleListAdapter(private val requestManager: RequestManager? = null) :
     RecyclerView.Adapter<SimpleListAdapter.SimpleHolder>() {
 
-    val news =  News(-1,"Подготовка: Пластик",fullText =  "Пластик рекомендуется ополоснуть от остатков пищи, жира. Если на акциях принимают пластик разного типа, то лучше разделить его по видам (Какие виды пластика есть и как его делить см в прикрепленных статьях).  \n" +
-            "\n" +
-            "Пластик также стоит сократить до минимального объема: например, бутылки должны быть смяты. С них также можно снять крышки. Если этикетки с бутылок легко снимаются, то желательно их также снять. Нельзя заполнять пластиковые бутылки другим пластиком (пакетами и т.п.).\n" +
-            "\n" +
-            "Пакеты и пленку разделить на два вида: только бесцветные, без рисунков и краски и все остальное.",
-        allPhotos = listOf("https://cdn.recyclemag.ru/main/a/a02173b78f7ea8014f9af461ef73e66f.jpg","https://cdn.recyclemag.ru/content/4/49280edc4b4d58ac6668f00c2315d0ac.jpg"))
-    val news2 =  News(-2,"Подготовка: Какие есть виды пластика",fullText =  "Какие есть виды пластика\n" +
+    val news =  News(-1,"",fullText =  "",
+        allPhotos = listOf("",""))
+    /*val news2 =  News(-2,"Подготовка: Какие есть виды пластика",fullText =  "Какие есть виды пластика\n" +
             "«Самые распространенные виды пластика – это ПЭТ (полиэтилентерефталат), ПНД, ПВД (полиэтилен низкого и высокого давления), ПВХ (поливинилхлорид), полистирол, полипропилен. У каждого из этих видов есть своя цифровая маркировка — от одного до шести. Другие виды пластика принято обозначать цифрой семь.\n" +
             "\n" +
             "Пластик различается по свойствам и делится на относительно безопасные виды для человека (например, одним из самых безопасных считается полипропилен) и потенциально опасные (полистирол при нагревании выделяет потенциально канцерогенное вещество стирол).\n" +
@@ -45,8 +41,9 @@ class SimpleListAdapter(private val requestManager: RequestManager? = null) :
             "«Разные виды пластика перерабатываются при разной температуре, в разных условиях и поэтому часто вообще на разных заводах. Если расплавить пластиковый микс, ничего путного из него сделать не получится. Есть пластики, которые можно смешивать, но обычно это ведет к утрате их изначальных свойств», — рассказывает Мария.",
         allPhotos = listOf("https://www.asi.org.ru/wp-content/uploads/2019/05/RIAN_5758011.LR_.ru_.jpg","https://www.asi.org.ru/wp-content/uploads/2019/05/bottle-940001_1920.jpg","https://www.asi.org.ru/wp-content/uploads/2019/05/plastic-bottles-115071_1920.jpg"))
 
+    */
     val list = arrayListOf(
-        SimpleListItem("Пластик", imgRes = R.drawable.icon_plastic, news = news.apply { attachedNews = arrayListOf(news2) }),
+        SimpleListItem("Пластик", imgRes = R.drawable.icon_plastic, news = news),
         SimpleListItem("Бумага", imgRes =  R.drawable.icon_paper),
         SimpleListItem("Стекло", imgRes = R.drawable.icon_glass),
         SimpleListItem("Металл", imgRes = R.drawable.icon_metal),

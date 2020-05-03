@@ -1,4 +1,4 @@
-package com.example.ecoapp.feature.topic
+package com.example.ecoapp.feature.topic.edit
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,66 +6,28 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.ecoapp.Constants
 import com.example.ecoapp.R
 import com.example.ecoapp.data.News
 import com.example.ecoapp.feature.main.MainActivity
 import com.example.ecoapp.feature.news_tabs.newslist.NewsAdapter
-import com.example.ecoapp.utils.ParseHelper
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.md.nails.presentation.basemvp.BaseMvpFragment
-import com.smarteist.autoimageslider.IndicatorAnimations
-import com.smarteist.autoimageslider.SliderAnimations
-import com.smarteist.autoimageslider.SliderView
-import kotlinx.android.synthetic.main.fragment_news_topic.*
-import safety.com.br.android_shake_detector.core.ShakeDetector
-import safety.com.br.android_shake_detector.core.ShakeOptions
+import kotlinx.android.synthetic.main.fragment_news_topic_edit.*
 
 
-class NewsFragment : BaseMvpFragment() {
+class EditNewsFragment : BaseMvpFragment() {
 
     override val layoutId: Int
-        get() = R.layout.fragment_news_topic
+        get() = R.layout.fragment_news_topic_edit
 
-    private var shakeDetector: ShakeDetector? = null
-
-    private val options = ShakeOptions()
-        .background(false)
-        .interval(1000)
-        .shakeCount(2)
-        .sensibility(2.0f)
 
     private var newsAdapter: NewsAdapter? = null
 
     private var initedNews: News? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    fun openEditMode(){
-        if (this.isResumed)
-        view?.findNavController()?.navigate(R.id.actionOpenTopicEdit,Bundle().apply {
-            putString(Constants.NEWS_KEY, Gson().toJson(initedNews))
-        })
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        shakeDetector?.stopShakeDetector(activity)
-        shakeDetector?.destroy(activity)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setNavLabel()
-  //      shakeDetector?.startService(activity)
-        if (shakeDetector == null)
-            shakeDetector = ShakeDetector(options).start(activity,
-                { openEditMode() })
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,38 +46,15 @@ class NewsFragment : BaseMvpFragment() {
     }
 
     fun setNews(news: News) {
-        title?.text = ParseHelper.parseIDLinks(news.topic)
-        news_topic_text?.text = ParseHelper.parseIDLinks(news.fullText)
+        title.setText(news.topic)
+        news_topic_text.setText(news.fullText)
         (activity as MainActivity).supportActionBar?.show()
-        val adapter = SliderAdapterExample(activity)
-        imageSlider.setSliderAdapter(adapter)
-        adapter.renewItems(news.allPhotos)
-        imageSlider.setIndicatorAnimation(IndicatorAnimations.WORM)
-        imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
-        imageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
-        imageSlider.scrollTimeInSec = 4
-        imageSlider.indicatorSelectedColor = resources.getColor(R.color.colorAccent)
-        imageSlider.indicatorUnselectedColor = resources.getColor(R.color.colorPrimaryDark)
-        if (news.allPhotos.size > 1)
-            imageSlider.startAutoCycle();
         val prefs = activity?.getSharedPreferences(Constants.SHAREDPREF, Context.MODE_PRIVATE)
         val list =
             Gson().fromJson(prefs?.getString(Constants.LIKED_LIST, ""), Constants.NEWS_LIST_TYPE)
                 ?: ArrayList<News>()
         news.liked = list.contains(news)
-        if (news.liked)
-            topic_like?.progress = 1f
-        else
-            topic_like?.progress = 0f
-        fab_like.setOnClickListener {
-            if (news.liked)
-                topic_like.speed = -1f
-            else
-                topic_like.speed = 1f
-            news.liked = !news.liked
-            topic_like.playAnimation()
-            onLikePressed(news, news.liked)
-        }
+
         newsAdapter =
             NewsAdapter(Glide.with(this)) { itnews, liked -> onLikePressed(itnews, liked) }
         news_list.adapter = newsAdapter
@@ -140,24 +79,39 @@ class NewsFragment : BaseMvpFragment() {
     fun setAttached(news:News){
         newsAdapter?.newsList = news.attachedNewsCached
         newsAdapter?.notifyDataSetChanged()
-        attached?.visibility = if (news.attachedNews.isEmpty()) View.GONE else View.VISIBLE
         initedNews = news
         setNavLabel()
-        like_view?.visibility = View.VISIBLE
-        news_loading?.visibility = View.GONE
+        fab_done.setOnClickListener {
+            FirebaseFirestore.getInstance()
+                .collection("preparings")
+                .whereEqualTo("id",initedNews?.id)
+                .get()
+                .addOnSuccessListener {res->
+                    for(doc in res)
+                        FirebaseFirestore.getInstance().collection("preparings").document(doc.id).update(mapOf(
+                            "topic" to title.text.toString(),
+                            "fullText" to news_topic_text.text.toString()
+                        )).addOnSuccessListener {
+                            view?.findNavController()?.navigateUp()
+                        }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setNavLabel()
     }
 
     fun setNavLabel(){
-        activity?.let {
-            (it as MainActivity).supportActionBar?.title = initedNews?.topic?.apply {
-                subSequence(
-                    0, if (length < 120) {
-                        length
-                    } else {
-                        20
-                    }
-                ).toString().plus("...")
-            }
+        (activity as MainActivity).supportActionBar?.title = initedNews?.topic?.apply {
+            subSequence(
+                0, if (length < 120) {
+                    length
+                } else {
+                    20
+                }
+            ).toString().plus("...")
         }
     }
 

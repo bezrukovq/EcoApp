@@ -81,25 +81,45 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_like"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:backgroundTint="@color/colorPrimary"
-            app:backgroundTint="@color/colorPrimaryDark"
-            app:borderWidth="2dp" />
+        <FrameLayout
+            android:id="@+id/like_view"
+            android:visibility="gone"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="end|bottom">
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_like"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/colorPrimary"
+                app:backgroundTint="@color/colorPrimaryDark"
+                app:borderWidth="2dp" />
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/topic_like"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:elevation="15dp"
+                android:scaleType="centerCrop"
+                app:lottie_fileName="like_button_2.json" />
+        </FrameLayout>
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/topic_like"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:elevation="15dp"
-            android:scaleType="centerCrop"
-            app:lottie_fileName="like_button_2.json" />
+        <FrameLayout
+            android:id="@+id/news_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary">
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="4dp"
+                android:layout_gravity="center|top"
+                android:scaleType="centerCrop"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="loader_food.json"
+                app:lottie_loop="true" />
+        </FrameLayout>
     </FrameLayout>
 
 </LinearLayout>

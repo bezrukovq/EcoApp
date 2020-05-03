@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?android:attr/actionBarSize"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Topic"
+                    android:padding="24dp"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="22sp" />
+
+                <EditText
+                    android:id="@+id/imagesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Images Links one in a row"
+                    android:padding="24dp"
+                    android:minLines="2"
+                    android:maxLines="6"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/news_topic_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="80dp"
+                    android:autoLink="all"
+                    android:minLines="5"
+                    android:maxLines="50"
+                    android:hint="Full text Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed convallis velit id diam hendrerit vehicula. Sed semper tortor tempus risus sodales, sed vulputate justo vulputate. Donec augue neque, maximus eu dui in, iaculis pulvinar purus. Vivamus et volutpat ipsum. Mauris sed finibus dolor. Sed cursus nisi eu diam tincidunt imperdiet. Etiam varius sapien eget arcu placerat suscipit. Nullam ut gravida quam. Sed accumsan eros ante, in consectetur nisi facilisis eget. Curabitur at risus sit amet risus finibus fermentum."
+                    android:linksClickable="true"
+                    android:padding="16dp"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textIsSelectable="true"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:layout_editor_absoluteY="127dp" />
+
+                <TextView
+                    android:id="@+id/create_new"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="24dp"
+                    android:gravity="center"
+                    android:text="Создать новую и прикрепить"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="22dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/news_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_news_list" />
+                <TextView
+                    android:id="@+id/delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="24dp"
+                    android:gravity="center"
+                    android:text="Удалить"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="22dp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+        <FrameLayout
+            android:id="@+id/like_view"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="end|bottom">
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_done"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_done_black_24dp"
+                android:backgroundTint="@color/colorPrimary"
+                app:backgroundTint="@color/colorPrimaryDark"
+                app:borderWidth="2dp" />
+        </FrameLayout>
+    </FrameLayout>
+
+</LinearLayout>

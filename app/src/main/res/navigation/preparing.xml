@@ -20,5 +20,13 @@
         <action
             android:id="@+id/actionOpenTopic"
             app:destination="@id/news_topic_fragment"/>
+        <action
+            android:id="@+id/actionOpenTopicEdit"
+            app:destination="@id/news_topic_fragment_edit"/>
+    </fragment>
+    <fragment
+        android:id="@+id/news_topic_fragment_edit"
+        android:name="com.example.ecoapp.feature.topic.edit.EditNewsFragment"
+        tools:layout="@layout/fragment_news_topic_edit">
     </fragment>
 </navigation>
