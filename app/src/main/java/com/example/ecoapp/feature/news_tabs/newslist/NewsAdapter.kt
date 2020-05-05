@@ -1,5 +1,6 @@
 package com.example.ecoapp.feature.news_tabs.newslist
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,9 @@ class NewsAdapter(private val requestManager: RequestManager,private var onLikeL
 
     inner class NewsHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(news: News){
+            val prefs = itemView.context?.getSharedPreferences(Constants.SHAREDPREF, Context.MODE_PRIVATE)
+            val list = Gson().fromJson(prefs?.getString(Constants.LIKED_LIST,""),Constants.NEWS_LIST_TYPE)?:ArrayList<News>()
+            news.liked = list.contains(news)
             itemView.setOnClickListener {
                 itemView.findNavController().navigate(R.id.actionOpenTopic, Bundle().apply {
                     putString(Constants.NEWS_KEY,Gson().toJson(news))

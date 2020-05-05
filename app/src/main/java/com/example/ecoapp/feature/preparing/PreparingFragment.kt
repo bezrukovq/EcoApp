@@ -12,7 +12,7 @@ class PreparingFragment: BaseMvpFragment() {
     override val layoutId: Int
         get() = R.layout.fragment_markings_list
 
-    val adapter = SimpleListAdapter()
+    val adapter = PreparingListAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

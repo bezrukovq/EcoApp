@@ -46,9 +46,9 @@ class NewsFragment : BaseMvpFragment() {
     }
 
     fun openEditMode(){
-        if (this.isResumed)
+        if (this.isResumed && initedNews?.vkUrl == "" && view?.findNavController()?.currentDestination?.id == R.id.news_topic_fragment)
         view?.findNavController()?.navigate(R.id.actionOpenTopicEdit,Bundle().apply {
-            putString(Constants.NEWS_KEY, Gson().toJson(initedNews))
+            putString(Constants.NEWS_KEY, Gson().toJson(initedNews.apply { this?.topic = "" }))
         })
     }
 
@@ -61,41 +61,45 @@ class NewsFragment : BaseMvpFragment() {
     override fun onResume() {
         super.onResume()
         setNavLabel()
-  //      shakeDetector?.startService(activity)
         if (shakeDetector == null)
             shakeDetector = ShakeDetector(options).start(activity,
                 { openEditMode() })
     }
 
+    private var adapter: SliderAdapterExample? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val news = Gson().fromJson(arguments?.getString(Constants.NEWS_KEY), News::class.java)
+        setImageSlider()
         if (news.topic.isEmpty())
-            FirebaseFirestore.getInstance().collection("preparings").whereEqualTo("id", news.id)
-                .get().addOnSuccessListener { res ->
+           tryLoad(news.id)
+        else {
+            setNews(news)
+            tryLoad(news.id)
+        }
+    }
+
+    private fun tryLoad(newsId:Int){
+        FirebaseFirestore.getInstance().collection("preparings").whereEqualTo("id", newsId)
+            .get().addOnSuccessListener { res ->
                 for (doc in res)
                     setNews(doc.toObject(News::class.java))
             }
-                .addOnFailureListener { it ->
-                    Log.e("AAAAAAAAA", it.message.toString())
-                }
-        else
-            setNews(news)
+            .addOnFailureListener { it ->
+                Log.e("AAAAAAAAA", it.message.toString())
+            }
     }
 
     fun setNews(news: News) {
         title?.text = ParseHelper.parseIDLinks(news.topic)
         news_topic_text?.text = ParseHelper.parseIDLinks(news.fullText)
         (activity as MainActivity).supportActionBar?.show()
-        val adapter = SliderAdapterExample(activity)
-        imageSlider.setSliderAdapter(adapter)
-        adapter.renewItems(news.allPhotos)
-        imageSlider.setIndicatorAnimation(IndicatorAnimations.WORM)
-        imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
-        imageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
-        imageSlider.scrollTimeInSec = 4
-        imageSlider.indicatorSelectedColor = resources.getColor(R.color.colorAccent)
-        imageSlider.indicatorUnselectedColor = resources.getColor(R.color.colorPrimaryDark)
+        adapter?.renewItems(news.allPhotos)
+        if (news.allPhotos.isEmpty())
+            imageSlider.visibility = View.GONE
+        else
+            imageSlider.visibility = View.VISIBLE
         if (news.allPhotos.size > 1)
             imageSlider.startAutoCycle();
         val prefs = activity?.getSharedPreferences(Constants.SHAREDPREF, Context.MODE_PRIVATE)
@@ -154,11 +158,22 @@ class NewsFragment : BaseMvpFragment() {
                     0, if (length < 120) {
                         length
                     } else {
-                        20
+                        120
                     }
                 ).toString().plus("...")
             }
         }
+    }
+
+    private fun setImageSlider(){
+        adapter = SliderAdapterExample(activity)
+        imageSlider.setSliderAdapter(adapter!!)
+        imageSlider.setIndicatorAnimation(IndicatorAnimations.WORM)
+        imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
+        imageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
+        imageSlider.scrollTimeInSec = 4
+        imageSlider.indicatorSelectedColor = resources.getColor(R.color.colorAccent)
+        imageSlider.indicatorUnselectedColor = resources.getColor(R.color.colorPrimaryDark)
     }
 
     @SuppressLint("ApplySharedPref")

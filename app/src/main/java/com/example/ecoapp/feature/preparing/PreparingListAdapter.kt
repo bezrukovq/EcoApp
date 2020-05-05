@@ -1,4 +1,4 @@
-package com.example.ecoapp.feature.simplelist
+package com.example.ecoapp.feature.preparing
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,18 +14,15 @@ import com.example.ecoapp.data.SimpleListItem
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.item_simple_list.view.*
 
-class SimpleListAdapter(private val requestManager: RequestManager? = null) :
-    RecyclerView.Adapter<SimpleListAdapter.SimpleHolder>() {
-
-    val news =  News(-1,"",fullText =  "",
-        allPhotos = listOf("",""))
+class PreparingListAdapter(private val requestManager: RequestManager? = null) :
+    RecyclerView.Adapter<PreparingListAdapter.SimpleHolder>() {
 
     val list = arrayListOf(
-        SimpleListItem("Пластик", imgRes = R.drawable.icon_plastic, news = news),
-        SimpleListItem("Бумага", imgRes =  R.drawable.icon_paper),
-        SimpleListItem("Стекло", imgRes = R.drawable.icon_glass),
-        SimpleListItem("Металл", imgRes = R.drawable.icon_metal),
-        SimpleListItem("Батарейки", imgRes = R.drawable.icon_battery)
+        SimpleListItem("Пластик", imgRes = R.drawable.icon_plastic, news = News(-1,"",fullText =  "", allPhotos = listOf("",""))),
+        SimpleListItem("Бумага", imgRes =  R.drawable.icon_paper, news = News(-2,"",fullText =  "", allPhotos = listOf("",""))),
+        SimpleListItem("Стекло", imgRes = R.drawable.icon_glass, news = News(-3,"",fullText =  "", allPhotos = listOf("",""))),
+        SimpleListItem("Металл", imgRes = R.drawable.icon_metal, news = News(-4,"",fullText =  "", allPhotos = listOf("",""))),
+        SimpleListItem("Батарейки", imgRes = R.drawable.icon_battery, news = News(-5,"",fullText =  "", allPhotos = listOf("","")))
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleHolder =
