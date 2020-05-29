@@ -13,4 +13,7 @@ class EcoApp: Application() {
         super.onCreate()
         VKSdk.initialize(applicationContext)
     }
+    companion object {
+        var isEditor = false
+    }
 }

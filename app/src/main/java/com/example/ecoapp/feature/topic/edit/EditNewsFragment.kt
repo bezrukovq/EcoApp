@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.ecoapp.Constants
+import com.example.ecoapp.EcoApp
 import com.example.ecoapp.R
 import com.example.ecoapp.data.News
 import com.example.ecoapp.feature.main.MainActivity
@@ -174,11 +175,11 @@ class EditNewsFragment : BaseMvpFragment() {
             }
             .addOnFailureListener(onFailuleListener)
     }
-
     private fun setCodeListener(){
         code?.addTextChangedListener{
             if (it.toString().equals("258013")){
                 code_layer.visibility = View.GONE
+                EcoApp.isEditor = true
                 title?.requestFocus()
                 code.setText("")
             }
@@ -197,6 +198,8 @@ class EditNewsFragment : BaseMvpFragment() {
     override fun onResume() {
         super.onResume()
         setNavLabel()
+        if (EcoApp.isEditor)
+            code_layer.visibility = View.GONE
     }
 
     fun setNavLabel() {
